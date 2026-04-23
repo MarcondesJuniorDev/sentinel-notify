@@ -9,11 +9,12 @@ FROM php:8.3-fpm-alpine
 WORKDIR /var/www/html
 
 RUN apk add --no-cache \
+    linux-headers \
     libpq-dev \
     libpng-dev \
     zlib-dev \
     $PHPIZE_DEPS \
-    && docker-php-ext-install bcmath pdo_pgsql \
+    && docker-php-ext-install bcmath pdo_pgsql sockets \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && apk del $PHPIZE_DEPS
