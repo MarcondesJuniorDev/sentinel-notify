@@ -1,0 +1,29 @@
+services:
+  app:
+    build: .
+    container_name: sentinel_app
+    volumes: [ ".:/var/www/html" ]
+    depends_on: [ db, redis ]
+    networks: [ sentinel_network ]
+
+  db:
+    image: postgres:15-alpine
+    container_name: sentinel_db
+    environment:
+      POSTGRES_DB: sentinel_db
+      POSTGRES_PASSWORD: root
+    networks: [ sentinel_network ]
+
+  redis:
+    image: redis:alpine
+    container_name: sentinel_redis
+    networks: [ sentinel_network ]
+
+  mailpit: # Captura e-mails para teste local
+    image: axllent/mailpit
+    ports: [ "8025:8025" ]
+    networks: [ sentinel_network ]
+
+networks:
+  sentinel_network:
+    driver: bridge
